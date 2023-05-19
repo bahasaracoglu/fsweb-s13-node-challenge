@@ -23,17 +23,16 @@ router.get("/:id", actionsMw.validateActionId, (req, res, next) => {
 
 router.post("/", actionsMw.validatePost, async (req, res, next) => {
   const { project_id, notes, description, completed } = req.body;
-
-  let postData = {
-    project_id: project_id,
-    notes: notes,
-    description: description,
-    completed: completed,
-  };
-
   try {
+    let postData = {
+      project_id: project_id,
+      notes: notes,
+      description: description,
+      completed: completed,
+    };
+
     const insertedPost = await actionsModel.insert(postData);
-    res.json(insertedPost);
+    res.status(201).json(insertedPost);
   } catch (error) {
     next(error);
   }
@@ -45,15 +44,14 @@ router.put(
   actionsMw.validatePost,
   async (req, res, next) => {
     const { project_id, notes, description, completed } = req.body;
-
-    let postData = {
-      project_id: project_id,
-      notes: notes,
-      description: description,
-      completed: completed,
-    };
-
     try {
+      let postData = {
+        project_id: project_id,
+        notes: notes,
+        description: description,
+        completed: completed,
+      };
+
       const updatedAction = await actionsModel.update(req.params.id, postData);
       res.json(updatedAction);
     } catch (error) {

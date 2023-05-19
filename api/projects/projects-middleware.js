@@ -19,7 +19,7 @@ async function validatePost(req, res, next) {
   try {
     const { name, description } = req.body;
     if (!name || !description) {
-      res.json({ message: "Required fields must be filled." });
+      res.status(400).json({ message: "Required fields must be filled." });
     } else {
       next();
     }

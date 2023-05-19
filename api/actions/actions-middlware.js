@@ -18,15 +18,21 @@ async function validateActionId(req, res, next) {
 }
 
 async function validatePost(req, res, next) {
-  const { description, project_id, notes } = req.body;
   try {
-    if (description.length > 128 || !description || project_id <= 0 || !notes) {
+    const { description, project_id, notes } = req.body;
+    if (
+      !description ||
+      description.length > 128 ||
+      project_id <= 0 ||
+      typeof project_id !== "number" ||
+      !notes
+    ) {
       res.status(400).json({ message: "Please check the fields" });
     } else {
       const projectExists = await projectModel.get(project_id);
       if (!projectExists) {
         res
-          .status(404)
+          .status(400)
           .json({ message: "Project with the given id does not exist" });
       } else {
         next();
