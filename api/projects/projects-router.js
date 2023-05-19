@@ -36,8 +36,45 @@ router.post("/", projectsMw.validatePost, async (req, res, next) => {
   }
 });
 
-router.put("/", async (req, res, next) => {});
-router.delete("/", async (req, res, next) => {});
-router.get("/", async (req, res, next) => {});
+router.put(
+  "/:id",
+  projectsMw.validateProjectId,
+  projectsMw.validatePost,
+  async (req, res, next) => {
+    try {
+      const { name, description } = req.body;
+      const newProject = { name: name, description: description };
+      const updatedProject = await projectsModel.update(
+        req.params.id,
+        newProject
+      );
+      res.json(updatedProject);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.delete("/:id", projectsMw.validateProjectId, async (req, res, next) => {
+  try {
+    await projectsModel.remove(req.params.id);
+    res.json({ message: "project deleted successfully" });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get(
+  "/:id/actions",
+  projectsMw.validateProjectId,
+  async (req, res, next) => {
+    try {
+      const projectActions = await projectsModel.getProjectActions(
+        req.params.id
+      );
+      res.json(projectActions || []);
+    } catch (error) {}
+  }
+);
 
 module.exports = router;
