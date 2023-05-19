@@ -1,6 +1,7 @@
 // "project" routerını buraya yazın!
 const express = require("express");
 const projectsModel = require("./projects-model");
+const projectsMw = require("./projects-middleware");
 const router = express.Router();
 
 router.get("/", async (req, res, next) => {
@@ -16,8 +17,19 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-router.get("/", async (req, res, next) => {});
-router.post("/", async (req, res, next) => {});
+router.get("/:id", projectsMw.validateProjectId, (req, res, next) => {
+  try {
+    res.json(req.currentProject);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post("/", projectsMw.validatePost, async (req, res, next) => {
+  try {
+  } catch (error) {}
+});
+
 router.put("/", async (req, res, next) => {});
 router.delete("/", async (req, res, next) => {});
 router.get("/", async (req, res, next) => {});
