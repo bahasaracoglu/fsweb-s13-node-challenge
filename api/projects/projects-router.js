@@ -27,7 +27,13 @@ router.get("/:id", projectsMw.validateProjectId, (req, res, next) => {
 
 router.post("/", projectsMw.validatePost, async (req, res, next) => {
   try {
-  } catch (error) {}
+    const { name, description } = req.body;
+    const newProject = { name: name, description: description };
+    const insertedProject = await projectsModel.insert(newProject);
+    res.json(insertedProject);
+  } catch (error) {
+    next(error);
+  }
 });
 
 router.put("/", async (req, res, next) => {});
